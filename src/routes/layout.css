@@ -1,2 +1,29 @@
+/* Tailwind + Plugins für Formulare und Texte einbinden */
 @import 'tailwindcss';
+@plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+
+/* Eigene Farbwelt: die "indigo"-Farben von Tailwind werden auf unser
+   Petrol-Grün umgestellt. So bleiben alle gewohnten Klassen wie
+   bg-indigo-600 nutzbar und das Projekt hat trotzdem ein eigenes Aussehen. */
+@theme {
+    --color-indigo-50: #eef4f2;
+    --color-indigo-100: #d7e7e1;
+    --color-indigo-400: #4c8f7d;
+    --color-indigo-600: #1f5f4e;
+    --color-indigo-700: #17483b;
+    --color-indigo-800: #0f3229;
+}
+
+body {
+    background-color: #f1f2f4;
+    color: #17202b;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Tastatur-Bedienung sichtbar lassen: wer mit Tab navigiert, sieht immer,
+   wo er gerade ist. */
+:focus-visible {
+    outline: 2px solid var(--color-indigo-600);
+    outline-offset: 2px;
+}
