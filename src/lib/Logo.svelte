@@ -1,6 +1,6 @@
 <script>
     // size = Kantenlänge in Pixel. Der Standard passt in die Kopfzeile,
-    // auf der Startseite rufen wir die Komponente mit size={56} auf.
+    // größere Stellen rufen die Komponente z.B. mit size={56} auf.
     let { size = 32 } = $props();
 </script>
 

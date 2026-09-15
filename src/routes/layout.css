@@ -3,23 +3,28 @@
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
 
-/* Eigene Farbwelt: die "indigo"-Farben von Tailwind werden auf unser
-   Petrol-Grün umgestellt. So bleiben alle gewohnten Klassen wie
-   bg-indigo-600 nutzbar und das Projekt hat trotzdem ein eigenes Aussehen. */
+/* --- Farben --------------------------------------------------------------
+   Tailwinds "indigo" wird auf unser Petrol-Grün umgestellt. Dadurch bleiben
+   alle gewohnten Klassen wie bg-indigo-600 nutzbar und das ganze Projekt
+   bekommt trotzdem ein eigenes Aussehen. Eine Stelle ändern und die komplette
+   Seite hat eine neue Farbe. */
 @theme {
     --color-indigo-50: #eef4f2;
     --color-indigo-100: #d7e7e1;
     --color-indigo-200: #b3d1c7;
+    --color-indigo-300: #86b5a5;
     --color-indigo-400: #4c8f7d;
     --color-indigo-600: #1f5f4e;
     --color-indigo-700: #17483b;
     --color-indigo-800: #0f3229;
+    --color-indigo-900: #08201a;
 }
 
 body {
-    background-color: #f1f2f4;
+    background-color: #f4f5f6;
     color: #17202b;
     font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 /* Tastatur-Bedienung sichtbar lassen: wer mit Tab navigiert, sieht immer,
@@ -29,33 +34,78 @@ body {
     outline-offset: 2px;
 }
 
-/* --- Animation -----------------------------------------------------------
-   Ein einziger Effekt für die ganze Seite: der Inhalt fährt beim Laden
-   leicht von unten herein. Mit den delay-Klassen starten die Elemente
-   nacheinander statt alle gleichzeitig. */
+/* --- Animationen ---------------------------------------------------------
+   Drei Effekte für die ganze Seite. Mehr braucht es nicht. */
+
+/* 1. Inhalt fährt beim Laden leicht von unten herein */
 @keyframes fade-up {
-    from {
-        opacity: 0;
-        transform: translateY(16px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-.fade-up {
-    animation: fade-up 0.6s ease-out both;
+/* 2. Dekorative Elemente schweben langsam auf und ab */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
 }
 
-.delay-1 { animation-delay: 0.1s; }
-.delay-2 { animation-delay: 0.2s; }
-.delay-3 { animation-delay: 0.3s; }
+/* 3. Ein heller Streifen wandert einmal über einen Button */
+@keyframes shine {
+    from { transform: translateX(-120%); }
+    to   { transform: translateX(220%); }
+}
 
-/* Wer im Betriebssystem weniger Bewegung eingestellt hat, bekommt die
-   Seite ohne Animation. */
+.fade-up { animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.float   { animation: float 6s ease-in-out infinite; }
+
+/* Startzeiten, damit die Elemente nacheinander erscheinen statt alle
+   gleichzeitig */
+.delay-1 { animation-delay: 0.08s; }
+.delay-2 { animation-delay: 0.16s; }
+.delay-3 { animation-delay: 0.24s; }
+.delay-4 { animation-delay: 0.32s; }
+.delay-5 { animation-delay: 0.40s; }
+
+/* --- Eigene Hilfsklassen -------------------------------------------------- */
+
+/* Feines Punktraster als Hintergrund. Zwei Zeilen CSS statt eines Bildes,
+   dadurch lädt nichts nach. */
+.dot-grid {
+    background-image: radial-gradient(#c8d2cf 1px, transparent 1px);
+    background-size: 24px 24px;
+}
+
+/* Überschrift mit Farbverlauf: der Verlauf wird auf den Text zugeschnitten
+   und die Schriftfarbe auf durchsichtig gesetzt. */
+.gradient-text {
+    background: linear-gradient(120deg, #17202b 30%, #1f5f4e 70%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Glanzeffekt für den Hauptbutton. Der Streifen liegt als ::after darüber
+   und wandert beim Hovern einmal durch. */
+.shine {
+    position: relative;
+    overflow: hidden;
+}
+.shine::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: translateX(-120%);
+}
+.shine:hover::after {
+    animation: shine 0.8s ease-out;
+}
+
+/* Wer im Betriebssystem weniger Bewegung eingestellt hat, bekommt die Seite
+   ohne Animationen. */
 @media (prefers-reduced-motion: reduce) {
-    .fade-up {
-        animation: none;
-    }
+    .fade-up, .float, .shine::after { animation: none; }
 }
