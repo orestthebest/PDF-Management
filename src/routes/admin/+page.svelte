@@ -11,6 +11,14 @@
     // new Set(...) wirft doppelte Namen weg, übrig bleibt die Anzahl der
     // User, die überhaupt etwas hochgeladen haben.
     let owners = $derived(new Set(data.pdfs.map((pdf) => pdf.owner_name)).size);
+ 
+    // Sicherheitsfrage vor dem Löschen. Sagt der User Nein, wird das
+    // Absenden des Formulars abgebrochen.
+    function confirmDelete(event) {
+        if (!confirm('Delete this document permanently?')) {
+            event.preventDefault();
+        }
+    }
 </script>
  
 <svelte:head>
@@ -61,6 +69,7 @@
 <th class="text-left px-6 py-4 font-semibold text-gray-600">Size</th>
 <th class="text-left px-6 py-4 font-semibold text-gray-600">Uploaded</th>
 <th class="text-right px-6 py-4 font-semibold text-gray-600">File</th>
+<th class="text-right px-6 py-4 font-semibold text-gray-600">Action</th>
 </tr>
 </thead>
 <tbody>
@@ -112,6 +121,24 @@
 </svg>
                                     Download
 </a>
+</td>
+ 
+                            <td class="px-6 py-4 text-right">
+<!-- Löschen per POST-Formular, damit ein Link-Aufruf nichts
+                                     löschen kann. confirmDelete fragt vorher nach. -->
+<form action="?/deletePdf" method="POST" class="m-0 inline-block"
+                                    onsubmit={confirmDelete}>
+<input type="hidden" name="pdfId" value={pdf.id} />
+<button type="submit"
+                                        class="inline-flex items-center gap-1.5 border border-gray-300 text-gray-500 rounded-xl px-3.5 py-2 font-semibold
+                                               hover:border-red-300 hover:text-red-600 hover:bg-red-50 transition cursor-pointer bg-transparent">
+<svg viewBox="0 0 24 24" class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+<path d="M4 7h16M10 11v6M14 11v6M5 7l1 13a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-13M9 7V4h6v3" />
+</svg>
+                                        Delete
+</button>
+</form>
 </td>
  
                         </tr>
